@@ -80,7 +80,7 @@ bool CSocketAddressIP::IsMatchIP( const CSocketAddressIP & ip ) const
 
 bool CSocketAddressIP::IsSameIP( const CSocketAddressIP & ip ) const
 {
-	return (ip.s_addr == s_addr); //FIXME : La memoire est desalouer le ip n'est plus readable Login ex.  Account dixonze 
+	return (ip.s_addr == s_addr);
 }
 
 bool CSocketAddressIP::SetHostStruct( const struct hostent * pHost )

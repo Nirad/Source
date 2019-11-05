@@ -39,14 +39,14 @@ BEGIN
 	BEGIN
 		BLOCK "040904b0"
 		BEGIN
-			VALUE "CompanyName",		"CryptoSphere development team"
-			VALUE "FileDescription",	"CryptoSphere " SPHERE_VER_STR_FULL
+			VALUE "CompanyName",		"SphereServer development team"
+			VALUE "FileDescription",	"SphereServer " SPHERE_VER_STR
 			VALUE "FileVersion",		SPHERE_VER_STR_FULL
-			VALUE "InternalName",		"CryptoSphere"
-			VALUE "LegalCopyright",		"Copyright 2019 by Cryptonite development team"
-			VALUE "OriginalFilename",	"CryptoSphere.exe"
-			VALUE "ProductName",		"CryptoSphere"
-			VALUE "ProductVersion",      SPHERE_VER_STR_FULL
+			VALUE "InternalName",		"SphereSvr"
+			VALUE "LegalCopyright",		"Copyright 1997-2019 by SphereServer development team"
+			VALUE "OriginalFilename",	"SphereSvr.exe"
+			VALUE "ProductName",		"SphereServer"
+			VALUE "ProductVersion",		SPHERE_VER_STR_FULL
 		END
 	END
 

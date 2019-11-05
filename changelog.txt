@@ -1,4 +1,4 @@
-﻿10-04-2016, Coruja
+10-04-2016, Coruja
 Changed: Food level won't decrease on GM chars anymore.
 [sphere_msgs.scp]: Removed messages 'npc_text_murd_*'.
 [speech/sphere_speech.scp]: Moved hardcoded speech commands 'I must consider my sins', 'I resign from my guild' and 'I resign from my town' to scripts.

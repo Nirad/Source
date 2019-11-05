@@ -791,12 +791,14 @@ public:
 	int m_iCombatSpeedEra;					// define swing speed formula to use on physical combat
 	WORD m_iSkillPracticeMax;				// max skill level a player can practice on dummies/targets upto
 	bool m_iPacketDeathAnimation;			// packet 02c
+	bool m_iSmeltOreOnDclick;				// smelt ore on dclick like 55i
 
 	// Flags for controlling pvp/pvm behaviour of players
 	int m_iCombatFlags;						// combat flags
 	int m_iMagicFlags;						// magic flags
 	int m_iRacialFlags;						// racial traits flags
 	int m_iRevealFlags;						// reveal flags used for SPELL_REVEAL (mostly for backwards).
+	int m_iCombatArcheryMovementDelay;		// If COMBAT_ARCHERYCANMOVE is not enabled, wait this much tenth of seconds (minimum=0) after the player stopped moving before starting a new attack..
 
 	// Criminal/Karma
 	bool m_fAttackingIsACrime;				// Is attacking (even before hitting) a crime?

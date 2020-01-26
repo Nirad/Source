@@ -112,6 +112,7 @@ CResource::CResource()
 	m_iMagicFlags = 0;
 	m_iRacialFlags = 0;
 	m_iRevealFlags = (REVEALF_DETECTINGHIDDEN|REVEALF_LOOTINGSELF|REVEALF_LOOTINGOTHERS|REVEALF_SPEAK|REVEALF_SPELLCAST);
+	m_iCombatArcheryMovementDelay = 10;
 
 	// Criminal/Karma
 	m_fAttackingIsACrime = true;
@@ -140,6 +141,7 @@ CResource::CResource()
 	m_iAttackerTimeout = 300 * TICK_PER_SEC;
 	m_iNotoTimeout = 30 * TICK_PER_SEC;
 	m_iMaxSkill = SKILL_QTY;
+	m_iSmeltOreOnDclick = false;
 
 	m_iDistanceWhisper = 1;
 	m_iDistanceYell = UO_MAP_VIEW_RADAR;
@@ -521,6 +523,7 @@ enum RC_TYPE
 	RC_SECTORSLEEP,					// m_iSectorSleepMask
 	RC_SECURE,						// m_fSecure
 	RC_SKILLPRACTICEMAX,			// m_iSkillPracticeMax
+	RC_SMELTOREONDCLICK,			// m_iSmeltOreOnDclick
 	RC_SNOOPCRIMINAL,				// m_iSnoopCriminal
 	RC_SPEECHOTHER,					// m_sSpeechOther
 	RC_SPEECHPET,					// m_sSpeechPet
@@ -603,7 +606,7 @@ const CAssocReg CResource::sm_szLoadKeys[RC_QTY + 1] =
 	{"COLORNOTOINVUL",				{ELEM_WORD,		OFFSETOF(CResource, m_iColorNotoInvul),					0}},
 	{"COLORNOTOINVULGAMEMASTER",	{ELEM_WORD,		OFFSETOF(CResource, m_iColorNotoInvulGameMaster),		0}},
 	{"COLORNOTONEUTRAL",			{ELEM_WORD,		OFFSETOF(CResource, m_iColorNotoNeutral),				0}},
-	{"COMBATARCHERYMOVEMENTDELAY",	{ELEM_BYTE,		OFFSETOF(CResource, m_iCombatArcheryMovementDelay),		0}},
+	{"COMBATARCHERYMOVEMENTDELAY",	{ELEM_INT,		OFFSETOF(CResource, m_iCombatArcheryMovementDelay),		0}},
 	{"COMBATDAMAGEERA",				{ELEM_BYTE,		OFFSETOF(CResource, m_iCombatDamageEra),				0}},
 	{"COMBATFLAGS",					{ELEM_INT,		OFFSETOF(CResource, m_iCombatFlags),					0}},
 	{"COMBATHITCHANCEERA",			{ELEM_BYTE,		OFFSETOF(CResource, m_iCombatHitChanceEra),				0}},
@@ -738,6 +741,7 @@ const CAssocReg CResource::sm_szLoadKeys[RC_QTY + 1] =
 	{"SECTORSLEEP",					{ELEM_INT,		OFFSETOF(CResource, m_iSectorSleepMask),				0}},
 	{"SECURE",						{ELEM_BOOL,		OFFSETOF(CResource, m_fSecure),							0}},
 	{"SKILLPRACTICEMAX",			{ELEM_WORD,		OFFSETOF(CResource, m_iSkillPracticeMax),				0}},
+	{"SMELTOREONDCLICK",			{ELEM_BOOL,		OFFSETOF(CResource, m_iSmeltOreOnDclick),				0} },
 	{"SNOOPCRIMINAL",				{ELEM_INT,		OFFSETOF(CResource, m_iSnoopCriminal),					0}},
 	{"SPEECHOTHER",					{ELEM_CSTRING,	OFFSETOF(CResource, m_sSpeechOther),					0}},
 	{"SPEECHPET",					{ELEM_CSTRING,	OFFSETOF(CResource, m_sSpeechPet),						0}},
@@ -1078,6 +1082,9 @@ bool CResource::r_LoadVal(CScript &s)
 			break;
 		case RC_PACKETDEATHANIMATION:
 			m_iPacketDeathAnimation = (s.GetArgVal() > 0);
+			break;
+		case RC_SMELTOREONDCLICK:
+			m_iSmeltOreOnDclick = s.GetArgVal() ? true : false;
 			break;
 		case RC_SKILLPRACTICEMAX:
 			m_iSkillPracticeMax = static_cast<WORD>(s.GetArgLLVal());

@@ -2341,7 +2341,7 @@ bool CChar::Attacker_Add(CChar *pChar, INT64 iThreat)
 
 	TCHAR *pszMsg = Str_GetTemp();
 	sprintf(pszMsg, g_Cfg.GetDefaultMsg(DEFMSG_COMBAT_ATTACKO), GetName(), pChar->GetName());
-	UpdateObjMessage(pszMsg, NULL, pChar->m_pClient, HUE_TEXT_DEF, TALKMODE_EMOTE);
+	//UpdateObjMessage(pszMsg, NULL, pChar->m_pClient, HUE_TEXT_DEF, TALKMODE_EMOTE);
 
 	if ( pChar->m_pClient && pChar->CanSee(this) )
 	{
@@ -2663,7 +2663,7 @@ WAR_SWING_TYPE CChar::Fight_Hit(CChar *pCharTarg)
 			else if ( !IsSetCombatFlags(COMBAT_ARCHERYCANMOVE) && !IsStatFlag(STATF_ArcherCanMove) )
 			{
 				// Only start next swing after the char stop moving for some time
-				if ( m_pClient && (-g_World.GetTimeDiff(m_pClient->m_timeLastEventWalk) / TICK_PER_SEC < g_Cfg.m_iCombatArcheryMovementDelay) )
+				if (m_pClient && (-(g_World.GetTimeDiff(m_pClient->m_timeLastEventWalk) / TICK_PER_SEC)* 10 < g_Cfg.m_iCombatArcheryMovementDelay))
 					return WAR_SWING_EQUIPPING;
 			}
 

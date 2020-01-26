@@ -63,7 +63,7 @@ bool CSocketAddressIP::IsLocalAddr() const
 
 bool CSocketAddressIP::IsSameIP( const CSocketAddressIP & ip ) const
 {
-	return (ip.s_addr == s_addr);
+	return (ip.s_addr == s_addr); //FIXME : La memoire est desalouer le ip n'est plus readable Login ex.  Account dixonze 
 }
 
 bool CSocketAddressIP::SetHostStr(LPCTSTR pszHostName)

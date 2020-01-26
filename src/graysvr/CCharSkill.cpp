@@ -1422,10 +1422,23 @@ bool CChar::Skill_SmeltOre(CItem *pOre)
 		SysMessageDefault(DEFMSG_SMELT_NOSKILL);
 		return false;
 	}
+	// add fire effect like in 55i
+	if (g_Cfg.m_iSmeltOreOnDclick)
+	{
+		CItem* pItemEffect = CItem::CreateBase(ITEMID_FIRE);
+		ASSERT(pItemEffect);
+		CPointMap pt = m_Act_p;
+		pt.m_z += 8;	// on top of the forge.
+		pItemEffect->SetAttr(ATTR_MOVE_NEVER);
+		pItemEffect->MoveToDecay(pt, TICK_PER_SEC);
+		if (!g_Cfg.IsSkillFlag(Skill_GetActive(), SKF_NOSFX))
+			Sound(0x2b);
+	}
+
 
 	UpdateDir(m_Act_p);
 
-	if ( !Skill_CheckSuccess(SKILL_MINING, pIngotDef->m_ttIngot.m_iSkillReq / 10) )
+	if ( !Skill_UseQuick(SKILL_MINING, pIngotDef->m_ttIngot.m_iSkillReq / 10) )
 	{
 		pOre->ConsumeAmount(maximum(1, (pOre->GetAmount() / 2)));
 		SysMessageDefault(DEFMSG_SMELT_FAIL);
@@ -1509,8 +1522,7 @@ bool CChar::Skill_SmeltItem(CItem *pItem)
 	pItem->Delete();
 	pIngot->SetAmount(pItem->GetAmount() * wAmount);
 	ItemBounce(pIngot, false);
-	Sound(SOUND_DRIP3);
-	Sound(SOUND_LIQUID);
+	Sound(0x02B);
 	SysMessageDefault(DEFMSG_SMELT_ITEM_SUCCESS);
 	return true;
 }

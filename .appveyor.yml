@@ -82,13 +82,3 @@ for:
         name: SphereSvr
     before_deploy:
       - sh: echo "set ssl:verify-certificate no" >> ~/.lftprc
-
-deploy:
-  provider: FTP
-  protocol: ftp
-  host:
-    secure: LjYrCGlwCyEGfBJ2fVvCF9pAlSlsob0eZaUnKrFWJTs=
-  username:
-    secure: UAZaqnbj2s8C/ObEXIg6xA==
-  password:
-    secure: 0tC8NEgCp8IBChlZ0ssFdzgwkD+iX3FykjKaRQe+03k=

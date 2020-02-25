@@ -330,17 +330,6 @@ int CEventLog::VEvent(DWORD dwMask, LPCTSTR pszFormat, va_list args)
 	return EventStr(dwMask, pszTemp);
 }
 
-LPCTSTR const g_Stat_Name[STAT_QTY] =	// not sorted obviously.
-{
-	"STR",
-	"INT",
-	"DEX",
-	"FOOD",
-	"KARMA",
-	"FAME"
-};
-
-LPCTSTR g_szCompiledDate = __DATE__;
 size_t CObjBase::sm_iCount = 0;	// UID table.
 ULONGLONG llTimeProfileFrequency = 1000;	// time profiler
 
@@ -423,7 +412,7 @@ LPCTSTR GetTimeMinDesc( int minutes )
 		"noon"
 	};
 */
-	LPCTSTR sm_ClockHour[] =
+	static const LPCTSTR sm_ClockHour[] =
 	{
  		g_Cfg.GetDefaultMsg(DEFMSG_CLOCK_HOUR_ZERO),
  		g_Cfg.GetDefaultMsg(DEFMSG_CLOCK_HOUR_ONE),
@@ -631,7 +620,7 @@ int Sphere_InitServer( int argc, char *argv[] )
 	EXC_SET("finalizing");
 	g_Serv.SetServerMode(SERVMODE_Run);
 
-	g_Serv.r_Call("f_onserver_start", &g_Serv, NULL);
+	g_Serv.r_Call("f_onserver_start", &g_Serv);
 	return g_Serv.m_iExitFlag;
 	EXC_CATCH;
 
@@ -644,7 +633,7 @@ int Sphere_InitServer( int argc, char *argv[] )
 void Sphere_ExitServer()
 {
 	// Trigger server quit
-	g_Serv.r_Call("f_onserver_exit", &g_Serv, NULL);
+	g_Serv.r_Call("f_onserver_exit", &g_Serv);
 
 	g_Serv.SetServerMode(SERVMODE_Exiting);
 

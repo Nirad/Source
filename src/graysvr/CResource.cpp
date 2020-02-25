@@ -193,7 +193,7 @@ CResource::CResource()
 
 	m_cCommandPrefix = '.';
 
-	m_iDefaultCommandLevel = 7;
+	m_iDefaultCommandLevel = PLEVEL_Owner;
 
 	// Notoriety colors
 	m_iColorNotoGood = 0x59;				// blue
@@ -792,7 +792,7 @@ bool CResource::r_LoadVal(CScript &s)
 	ADDTOCALLSTACK("CResource::r_LoadVal");
 	EXC_TRY("LoadVal");
 
-	int index = FindTableHeadSorted(s.GetKey(), reinterpret_cast<LPCTSTR const *>(sm_szLoadKeys), COUNTOF(sm_szLoadKeys) - 1, sizeof(sm_szLoadKeys[0]));
+	int index = FindTableHeadSortedRes(s.GetKey(), reinterpret_cast<const LPCTSTR *>(sm_szLoadKeys), COUNTOF(sm_szLoadKeys) - 1);
 	if ( index < 0 )
 	{
 		if ( s.IsKeyHead("REGEN", 5) )	// REGENx=<stat regeneration rate>
@@ -1189,7 +1189,7 @@ bool CResource::r_WriteVal(LPCTSTR pszKey, CGString &sVal, CTextConsole *pSrc)
 	EXC_TRY("WriteVal");
 
 	// Just do stats values for now
-	int index = FindTableHeadSorted(pszKey, reinterpret_cast<LPCTSTR const *>(sm_szLoadKeys), COUNTOF(sm_szLoadKeys) - 1, sizeof(sm_szLoadKeys[0]));
+	int index = FindTableHeadSortedRes(pszKey, reinterpret_cast<const LPCTSTR *>(sm_szLoadKeys), COUNTOF(sm_szLoadKeys) - 1);
 	if ( index < 0 )
 	{
 		if ( !strnicmp(pszKey, "REGEN", 5) )
@@ -1689,7 +1689,7 @@ SKILL_TYPE CResource::FindSkillKey(LPCTSTR pszKey) const
 STAT_TYPE CResource::FindStatKey(LPCTSTR pszKey)	// static
 {
 	ADDTOCALLSTACK("CResource::FindStatKey");
-	return static_cast<STAT_TYPE>(FindTable(pszKey, g_Stat_Name, COUNTOF(g_Stat_Name)));
+	return static_cast<STAT_TYPE>(FindTable(pszKey, g_Stat_Name, COUNTOF(g_Stat_Name) - 1));
 }
 
 int CResource::GetSpellEffect(SPELL_TYPE spell, int iSkillVal) const
@@ -1878,11 +1878,10 @@ PLEVEL_TYPE CResource::GetPrivCommandLevel(LPCTSTR pszCmd) const
 	size_t iPlevel = PLEVEL_QTY;
 	while ( --iPlevel > 0 )
 	{
-		LPCTSTR const *pszTable = m_PrivCommands[iPlevel].GetBasePtr();
-		if ( FindTableHeadSorted(pszCmd, pszTable, m_PrivCommands[iPlevel].GetCount()) >= 0 )
+		if ( FindTableHeadSorted(pszCmd, m_PrivCommands[iPlevel].GetBasePtr(), m_PrivCommands[iPlevel].GetCount()) >= 0 )
 			return static_cast<PLEVEL_TYPE>(iPlevel);
 	}
-	return static_cast<PLEVEL_TYPE>(m_iDefaultCommandLevel);
+	return m_iDefaultCommandLevel;
 }
 
 bool CResource::CanUsePrivVerb(const CScriptObj *pObjTarg, LPCTSTR pszCmd, CTextConsole *pSrc) const

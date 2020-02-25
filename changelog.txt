@@ -1744,3 +1744,15 @@ Changed: Worldsave now will save all multis on 'spheremultis.scp' file instead o
 Changed: Misc optimizations on internal variables engine.
 	-This should give a big performance boost to load files at server startup
 	-Ported from SphereX branch, credits to Nolok
+
+29-01-2020, Coruja
+Fixed: Console not throwing some specific exception errors when the exception occur.
+
+20-02-2020, Coruja
+Fixed: Function UNEXTRACT making server crash.
+Changed: Equipped items now will update timer using TIMERD (10x per sec) instead TIMER (1x per sec).
+[sphereCrypt.ini]: Added crypt key for classic client 7.0.84 and enhanced client 4.0.84
+
+24-02-2020, Coruja
+Added: Support for function MAPWAYPOINT on classic clients >= 7.0.84.0.
+	-NOTE: Enhanced clients support all waypoint types, but classic clients only support type 0 (remove) and 6 (healer)

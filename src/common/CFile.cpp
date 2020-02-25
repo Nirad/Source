@@ -85,7 +85,7 @@ DWORD CFile::GetLength()
 {
 	// Get the size of the file
 	DWORD dwPos = GetPosition();	// save current pos
-	DWORD dwSize = SeekToEnd();
+	DWORD dwSize = Seek(0, FILE_END);
 	Seek(dwPos, FILE_BEGIN);		// restore previous pos
 	return dwSize;
 }
@@ -206,7 +206,7 @@ CGString CGFile::GetMergedFileName(LPCTSTR pszPath, LPCTSTR pszFileName) // stat
 	if ( pszFileName )
 		strncat(szFullPath, pszFileName, sizeof(szFullPath) - 1);
 
-	return static_cast<CGString>(szFullPath);
+	return CGString(szFullPath);
 }
 
 LPCTSTR CGFile::GetFilesTitle(LPCTSTR pszPath)	// static

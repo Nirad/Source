@@ -175,7 +175,8 @@ public:
 	int GetLinear(int iPercent) const
 	{
 		// ARGS: iPercent = 0-1000
-		return static_cast<int>(m_iLo) + IMULDIV(GetRange(), iPercent, 1000);
+		const int iRange = GetRange();
+		return static_cast<int>(m_iLo) + IMULDIV(iRange, iPercent, 1000);
 	}
 	int GetRandom() const
 	{
@@ -770,7 +771,8 @@ public:
 	bool m_fMonsterFight;					// Will creatures fight amoung themselves.
 	bool m_fMonsterFear;					// will they run away if hurt ?
 	DWORD m_iBankIMax;						// Maximum number of items allowed in bank.
-	int m_iBankWMax;						// Maximum weight in WEIGHT_UNITS stones allowed in bank.
+	int m_iBankWMax;						// Maximum weight in stones allowed in bank.
+	int m_iBackpackMaxWeight;				// Maximum weight in stones allowed in main backpack.
 	int m_iVendorMaxSell;					// Max things a vendor will sell in one shot.
 	unsigned int m_iMaxCharComplexity;		// How many chars per sector.
 	unsigned int m_iMaxItemComplexity;		// How many items per meter.

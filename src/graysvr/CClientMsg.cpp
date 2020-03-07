@@ -36,11 +36,13 @@ void CClient::resendBuffs()
 	if ( m_pChar->LayerFind(LAYER_FLAG_Criminal) )
 		addBuff(BI_CRIMINALSTATUS, 1153802, 1153828);
 
+	INT64 iTimerItem = 0;
 	CItem *pMemory = m_pChar->LayerFind(LAYER_FLAG_Stuck);
 	if ( pMemory )
 	{
+		iTimerItem = pMemory->GetTimerAdjusted();
 		removeBuff(BI_PARALYZE);
-		addBuff(BI_PARALYZE, 1075827, 1075828, static_cast<WORD>(maximum(pMemory->GetTimerAdjusted(), 0)));
+		addBuff(BI_PARALYZE, 1075827, 1075828, static_cast<WORD>(maximum(iTimerItem, 0)));
 	}
 
 	WORD wStatEffect = 0;
@@ -54,8 +56,9 @@ void CClient::resendBuffs()
 		if ( !pItem->IsType(IT_SPELL) )
 			continue;
 
+		iTimerItem = pItem->GetTimerAdjusted();
 		wStatEffect = pItem->m_itSpell.m_spelllevel;
-		wTimerEffect = static_cast<WORD>(maximum(pItem->GetTimerAdjusted(), 0));
+		wTimerEffect = static_cast<WORD>(maximum(iTimerItem, 0));
 
 		switch ( pItem->m_itSpell.m_spell )
 		{
@@ -270,7 +273,8 @@ void CClient::resendBuffs()
 			}
 			case SPELL_Strangle:
 			{
-				double dStamPenalty = 3 - ((static_cast<double>(m_pChar->Stat_GetVal(STAT_DEX)) / maximum(1, m_pChar->Stat_GetAdjusted(STAT_DEX))) * 2);
+				int iDex = m_pChar->Stat_GetAdjusted(STAT_DEX);
+				double dStamPenalty = 3 - ((static_cast<double>(m_pChar->Stat_GetVal(STAT_DEX)) / maximum(1, iDex)) * 2);
 				WORD wTimerTotal = 0;
 				for ( WORD w = 0; w < wStatEffect; ++w )
 					wTimerTotal += (wStatEffect - w) * TICK_PER_SEC;
@@ -1471,20 +1475,18 @@ BYTE CClient::Setup_FillCharList(Packet *pPacket)
 	// List available chars on account
 	ASSERT(m_pAccount);
 
-	size_t iCount = 0;
-	size_t iMax = minimum(maximum(m_pAccount->m_Chars.GetCharCount(), m_pAccount->GetMaxChars()), MAX_CHARS_PER_ACCT);
 	size_t iQty = m_pAccount->m_Chars.GetCharCount();
+	BYTE iMax = m_pAccount->GetMaxChars();
 	if ( iQty > iMax )
 		iQty = iMax;
 
+	size_t iCount = 0;
 	for ( size_t i = 0; i < iQty; ++i )
 	{
 		CGrayUID uid = m_pAccount->m_Chars.GetChar(i);
 		CChar *pChar = uid.CharFind();
 		if ( !pChar )
 			continue;
-		if ( iCount >= iMax )
-			break;
 
 		m_tmSetupCharList[iCount] = uid;
 		pPacket->writeStringFixedASCII(pChar->GetName(), MAX_NAME_SIZE);
@@ -2633,10 +2635,11 @@ void CClient::addAOSTooltip(const CObjBase *pObj, bool fRequested, bool fShop)
 						{
 							if ( m_NetState->isClientVersion(MINCLIVER_ML) )
 							{
-								if ( pItem->m_ModMaxWeight )
+								int iMaxWeight = (pItem->GetContainedLayer() == LAYER_PACK) ? g_Cfg.m_iBackpackMaxWeight + pItem->m_ModMaxWeight : pItem->m_ModMaxWeight;
+								if ( iMaxWeight > 0 )
 								{
 									m_TooltipData.Add(t = new CClientTooltip(1072241)); // Contents: ~1_COUNT~/~2_MAXCOUNT~ items, ~3_WEIGHT~/~4_MAXWEIGHT~ stones
-									t->FormatArgs("%" FMTSIZE_T "\t%d\t%d\t%d", pContainer->GetCount(), MAX_ITEMS_CONT, pContainer->GetTotalWeight() / WEIGHT_UNITS, pItem->m_ModMaxWeight / WEIGHT_UNITS);
+									t->FormatArgs("%" FMTSIZE_T "\t%d\t%d\t%d", pContainer->GetCount(), MAX_ITEMS_CONT, pContainer->GetTotalWeight() / WEIGHT_UNITS, iMaxWeight / WEIGHT_UNITS);
 								}
 								else
 								{

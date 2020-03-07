@@ -1211,19 +1211,10 @@ bool CItemContainer::CanContainerHold(const CItem *pItem, const CChar *pCharMsg)
 		return false;
 	}
 
-	if ( m_ModMaxWeight )
+	int iMaxWeight = (GetContainedLayer() == LAYER_PACK) ? g_Cfg.m_iBackpackMaxWeight + m_ModMaxWeight : m_ModMaxWeight;
+	if ( iMaxWeight && (GetTotalWeight() + pItem->GetWeight() > iMaxWeight) )
 	{
-		if ( GetTotalWeight() + pItem->GetWeight() > m_ModMaxWeight )
-		{
-			pCharMsg->SysMessageDefault(DEFMSG_CONT_FULL_WEIGHT);
-			return false;
-		}
-	}
-
-	if ( !IsItemEquipped() && pItem->IsContainer() && (pItem->Item_GetDef()->GetVolume() >= Item_GetDef()->GetVolume()) )
-	{
-		// Is the container too small? Can't put barrels inside barrels
-		pCharMsg->SysMessageDefault(DEFMSG_CONT_TOOSMALL);
+		pCharMsg->SysMessageDefault(DEFMSG_CONT_FULL_WEIGHT);
 		return false;
 	}
 
@@ -1292,13 +1283,6 @@ bool CItemContainer::CanContainerHold(const CItem *pItem, const CChar *pCharMsg)
 			if ( !pItem->Item_GetDef()->GetMakeValue(0) )
 			{
 				pCharMsg->SysMessageDefault(DEFMSG_MSG_ERR_NOT4SALE);
-				return false;
-			}
-
-			// Check if this vendor box hasn't already reached its content limit
-			if ( GetCount() >= MAX_ITEMS_CONT )
-			{
-				pCharMsg->SysMessageDefault(DEFMSG_CONT_FULL);
 				return false;
 			}
 			break;

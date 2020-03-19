@@ -1771,3 +1771,8 @@ Changed: Chars now can exceed MAXWEIGHT limit, but not backpack max weight limit
 	-Added: cont_full_items, msg_fatigue_weight
 	-Removed: cont_full, cont_magic, cont_toosmall, msg_heavy, msg_overload
 	-Updated: cont_full_weight
+
+17-03-2020, Coruja
+Fixed: HEARALL function not working correctly.
+Fixed: BackpackMaxWeight setting on sphere.ini not allowing unlimited weight when set to -1.
+[sphereCrypt.ini]: Added crypt key for classic client 7.0.85 and enhanced client 4.0.85
